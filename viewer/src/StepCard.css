@@ -1,0 +1,131 @@
+.step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.step-card__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.step-card__number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.step-card__action {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.step-card__badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.step-card__badge--text {
+  background: var(--badge-blue-bg);
+  color: var(--badge-blue-text);
+}
+
+.step-card__badge--crop {
+  background: var(--badge-amber-bg);
+  color: var(--badge-amber-text);
+}
+
+.step-card__badge--missing {
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.step-card__screenshots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.step-card__shot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.step-card__shot figcaption {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.step-card__shot img {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--surface-2);
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+}
+
+.step-card__compact h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.step-card__compact pre {
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 12rem;
+  overflow: auto;
+  color: var(--text-primary);
+}
+
+.step-card__tokens {
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+
+.step-card__savings-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-green);
+}
+
+@media (max-width: 768px) {
+  .step-card__screenshots {
+    grid-template-columns: 1fr;
+  }
+}
