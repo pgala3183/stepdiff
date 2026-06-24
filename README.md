@@ -2,6 +2,40 @@
 
 Semantic compaction layer for browser automation agents. Instead of sending full screenshots to the LLM after every action, StepDiff diffs browser state and emits compact observations — typically 80-95% fewer tokens.
 
+## Demo
+
+The viewer replays recorded runs and shows before/after screenshots, the compact observation sent to the LLM, and token savings per step. Example: the `local_checkout` task compacts **4,800 baseline tokens → 393 compact tokens (91.8% savings)**.
+
+![StepDiff viewer — local_checkout overview](docs/demo/overview.png)
+
+**Step 1 — validation error (`text_only`)**  
+Submit an empty form; StepDiff emits a short DOM diff instead of a full page snapshot.
+
+**Step 2 — fill email (`text_only`, 97.9% savings)**  
+Value-only field updates collapse to a few lines of text.
+
+![Step 2 — fill email field](docs/demo/step-02-email-fill.png)
+
+**Step 3 — quantity + chart (`crop_with_context`, 95.9% savings)**  
+When the DOM change is small but the canvas updates visually, StepDiff crops the changed region with context.
+
+![Step 3 — change quantity to update canvas chart](docs/demo/step-03-quantity-crop.png)
+
+**Step 4 — checkout modal (`text_only`, 91.8% savings)**  
+Structural changes (new dialog, buttons) route to a text-only DOM summary.
+
+![Step 4 — open checkout modal](docs/demo/step-04-modal.png)
+
+![Step 4 — compact observation](docs/demo/step-04-modal-compact.png)
+
+Run the viewer locally after recording a run:
+
+```bash
+cd viewer && npm install && npm run dev
+```
+
+API must be running on port 8000 (`uvicorn stepdiff.main:app --reload --app-dir backend`).
+
 ## Quick start
 
 **macOS / Linux**
