@@ -1,0 +1,11 @@
+{
+  "description": "Invalid email keyword triggers error detection",
+  "steps": [
+    {
+      "step_id": "step_001",
+      "expected_route": "text_only",
+      "content_contains_any": ["invalid", "error"],
+      "min_savings_pct": 50
+    }
+  ]
+}

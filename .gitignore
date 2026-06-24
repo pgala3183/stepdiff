@@ -12,8 +12,8 @@ build/
 # Secrets and local env
 .env
 
-# Recorded runs (regenerate locally)
-runs/
+# Recorded runs (regenerate locally; examples/runs/ is committed as fixtures)
+/runs/
 backend/runs/
 
 # Node / viewer build artifacts

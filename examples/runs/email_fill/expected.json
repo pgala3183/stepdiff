@@ -1,0 +1,12 @@
+{
+  "description": "Email textbox value updated, validation error cleared",
+  "steps": [
+    {
+      "step_id": "step_001",
+      "expected_route": "text_only",
+      "content_contains_any": ["field updated", "new text", "user@example.com", "email"],
+      "min_savings_pct": 50,
+      "error_messages_cleared": true
+    }
+  ]
+}

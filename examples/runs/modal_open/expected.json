@@ -1,0 +1,12 @@
+{
+  "description": "Modal dialog appears with order summary",
+  "steps": [
+    {
+      "step_id": "step_001",
+      "expected_route": "text_only",
+      "content_contains_any": ["modal", "dialog", "order summary", "submit order"],
+      "min_savings_pct": 50,
+      "has_modal": true
+    }
+  ]
+}

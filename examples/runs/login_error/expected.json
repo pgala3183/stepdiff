@@ -1,0 +1,11 @@
+{
+  "description": "Validation error on empty email submit",
+  "steps": [
+    {
+      "step_id": "step_001",
+      "expected_route": "text_only",
+      "content_contains_any": ["required", "error"],
+      "min_savings_pct": 50
+    }
+  ]
+}

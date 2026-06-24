@@ -1,0 +1,11 @@
+{
+  "url": "http://localhost/login",
+  "title": "Login",
+  "screenshot_path": null,
+  "dom_text": "Email\nPassword\nLogin",
+  "dom_nodes": [
+    {"role": "textbox", "name": "Email", "value": "", "bbox": null},
+    {"role": "button", "name": "Login", "value": null, "bbox": null}
+  ],
+  "timestamp": 1700000001.0
+}

@@ -1,0 +1,8 @@
+{
+  "run_id": "modal_open",
+  "task_description": "Open checkout modal after valid email",
+  "start_time": 1700000100.0,
+  "end_time": 1700000105.0,
+  "step_count": 1,
+  "runtime": "local"
+}
