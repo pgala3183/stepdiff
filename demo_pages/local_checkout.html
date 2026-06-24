@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Checkout — StepDiff Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 520px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+      background: #f4f5f7;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0 0 0.25rem;
+    }
+
+    .subtitle {
+      color: #555;
+      margin: 0 0 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #d8dce3;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="email"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid #b8bec8;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    input:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 1px;
+      border-color: #3b82f6;
+    }
+
+    .field-error {
+      display: none;
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin: 0.15rem 0 0.75rem;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    .chart-wrap {
+      margin: 1rem 0;
+    }
+
+    .chart-label {
+      font-size: 0.875rem;
+      color: #444;
+      margin-bottom: 0.5rem;
+    }
+
+    #quantity-chart {
+      display: block;
+      width: 100%;
+      height: 160px;
+      background: #fafbfc;
+      border: 1px solid #e2e6ec;
+      border-radius: 6px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #submit-btn {
+      background: #e5e7eb;
+      color: #111;
+    }
+
+    #submit-btn:hover {
+      background: #d1d5db;
+    }
+
+    #checkout-btn {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    #checkout-btn:hover {
+      background: #1d4ed8;
+    }
+
+    #checkout-btn:disabled {
+      background: #93b4f6;
+      cursor: not-allowed;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal h2 {
+      margin: 0 0 1rem;
+      font-size: 1.2rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+
+    .summary-total {
+      font-weight: 700;
+      margin-top: 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    #submit-order-btn {
+      width: 100%;
+      margin-top: 1.25rem;
+      background: #16a34a;
+      color: #fff;
+    }
+
+    #submit-order-btn:hover {
+      background: #15803d;
+    }
+
+    #close-modal-btn {
+      width: 100%;
+      margin-top: 0.5rem;
+      background: #f3f4f6;
+      color: #333;
+    }
+
+    #order-confirmation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      border-radius: 6px;
+      color: #166534;
+      font-size: 0.9rem;
+    }
+
+    #order-confirmation.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Local Checkout</h1>
+  <p class="subtitle">StepDiff demo — validation, canvas chart, and modal flow.</p>
+
+  <div class="card">
+    <form id="checkout-form" novalidate>
+      <label for="email">Email address</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        aria-describedby="email-error"
+      />
+      <p id="email-error" class="field-error" role="alert">Email is required</p>
+
+      <label for="quantity">Quantity</label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity"
+        value="1"
+        min="1"
+        max="10"
+        step="1"
+        aria-describedby="chart-label"
+      />
+
+      <div class="chart-wrap">
+        <p id="chart-label" class="chart-label">Units per week (bar chart)</p>
+        <canvas id="quantity-chart" width="460" height="160" role="img" aria-label="Quantity bar chart"></canvas>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="submit-btn">Submit</button>
+        <button type="button" id="checkout-btn" disabled>Checkout</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <h2 id="modal-title">Order Summary</h2>
+      <div id="modal-summary">
+        <div class="summary-row">
+          <span>Email</span>
+          <span id="summary-email">—</span>
+        </div>
+        <div class="summary-row">
+          <span>Quantity</span>
+          <span id="summary-quantity">—</span>
+        </div>
+        <div class="summary-row">
+          <span>Unit price</span>
+          <span>$12.00</span>
+        </div>
+        <p class="summary-total">Total: <span id="summary-total">$12.00</span></p>
+      </div>
+      <button type="button" id="submit-order-btn">Submit Order</button>
+      <button type="button" id="close-modal-btn">Close</button>
+      <p id="order-confirmation" role="status">Order placed successfully. Thank you!</p>
+    </div>
+  </div>
+
+  <script>
+    const UNIT_PRICE = 12;
+    const BAR_COLORS = ["#3b82f6", "#60a5fa", "#2563eb", "#1d4ed8", "#93c5fd"];
+
+    const emailInput = document.getElementById("email");
+    const emailError = document.getElementById("email-error");
+    const quantityInput = document.getElementById("quantity");
+    const canvas = document.getElementById("quantity-chart");
+    const ctx = canvas.getContext("2d");
+    const submitBtn = document.getElementById("submit-btn");
+    const checkoutBtn = document.getElementById("checkout-btn");
+    const modalOverlay = document.getElementById("modal-overlay");
+    const summaryEmail = document.getElementById("summary-email");
+    const summaryQuantity = document.getElementById("summary-quantity");
+    const summaryTotal = document.getElementById("summary-total");
+    const submitOrderBtn = document.getElementById("submit-order-btn");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+    const orderConfirmation = document.getElementById("order-confirmation");
+
+    let formValid = false;
+
+    function drawChart(quantity) {
+      const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = { top: 16, right: 16, bottom: 28, left: 36 };
+      const chartW = width - padding.left - padding.right;
+      const chartH = height - padding.top - padding.bottom;
+
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = "#fafbfc";
+      ctx.fillRect(0, 0, width, height);
+
+      const barCount = qty;
+      const gap = 8;
+      const barWidth = (chartW - gap * (barCount - 1)) / barCount;
+      const maxVal = 10;
+
+      ctx.strokeStyle = "#d1d5db";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, padding.top);
+      ctx.lineTo(padding.left, padding.top + chartH);
+      ctx.lineTo(padding.left + chartW, padding.top + chartH);
+      ctx.stroke();
+
+      for (let i = 0; i < barCount; i++) {
+        const value = Math.round(((i + 1) / barCount) * qty);
+        const barH = (value / maxVal) * chartH;
+        const x = padding.left + i * (barWidth + gap);
+        const y = padding.top + chartH - barH;
+
+        ctx.fillStyle = BAR_COLORS[i % BAR_COLORS.length];
+        ctx.fillRect(x, y, barWidth, barH);
+
+        ctx.fillStyle = "#374151";
+        ctx.font = "11px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(String(value), x + barWidth / 2, padding.top + chartH + 16);
+      }
+
+      ctx.fillStyle = "#6b7280";
+      ctx.font = "11px system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Qty: " + qty, padding.left, 12);
+    }
+
+    function validateEmail() {
+      const value = emailInput.value.trim();
+      if (!value) {
+        emailError.classList.add("visible");
+        emailInput.setAttribute("aria-invalid", "true");
+        formValid = false;
+        checkoutBtn.disabled = true;
+        return false;
+      }
+      emailError.classList.remove("visible");
+      emailInput.setAttribute("aria-invalid", "false");
+      formValid = true;
+      checkoutBtn.disabled = false;
+      return true;
+    }
+
+    function updateSummary() {
+      const qty = parseInt(quantityInput.value, 10) || 1;
+      summaryEmail.textContent = emailInput.value.trim();
+      summaryQuantity.textContent = String(qty);
+      summaryTotal.textContent = "$" + (qty * UNIT_PRICE).toFixed(2);
+    }
+
+    function openModal() {
+      if (!validateEmail()) return;
+      updateSummary();
+      orderConfirmation.classList.remove("visible");
+      modalOverlay.classList.add("open");
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove("open");
+    }
+
+    submitBtn.addEventListener("click", function () {
+      validateEmail();
+    });
+
+    emailInput.addEventListener("input", function () {
+      if (emailInput.value.trim()) {
+        emailError.classList.remove("visible");
+        emailInput.setAttribute("aria-invalid", "false");
+        formValid = true;
+        checkoutBtn.disabled = false;
+      }
+    });
+
+    quantityInput.addEventListener("input", function () {
+      drawChart(quantityInput.value);
+    });
+
+    quantityInput.addEventListener("change", function () {
+      drawChart(quantityInput.value);
+    });
+
+    checkoutBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+
+    modalOverlay.addEventListener("click", function (event) {
+      if (event.target === modalOverlay) closeModal();
+    });
+
+    submitOrderBtn.addEventListener("click", function () {
+      orderConfirmation.classList.add("visible");
+    });
+
+    drawChart(quantityInput.value);
+  </script>
+</body>
+</html>

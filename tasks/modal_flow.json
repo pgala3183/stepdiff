@@ -1,0 +1,19 @@
+{
+  "id": "modal_flow",
+  "description": "Fill email and open checkout modal",
+  "url": "demo_pages/local_checkout.html",
+  "actions": [
+    {
+      "type": "type",
+      "selector": "#email",
+      "value": "demo@example.com",
+      "description": "Fill email"
+    },
+    {
+      "type": "click",
+      "selector": "#checkout-btn",
+      "description": "Open checkout modal"
+    }
+  ],
+  "expected_routes": ["text_only", "text_only"]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "local_checkout",
+  "description": "Complete a local checkout flow testing all compaction routes",
+  "url": "demo_pages/local_checkout.html",
+  "actions": [
+    {
+      "type": "click",
+      "selector": "#submit-btn",
+      "description": "Submit empty form to trigger validation error"
+    },
+    {
+      "type": "type",
+      "selector": "#email",
+      "value": "test@example.com",
+      "description": "Fill in email field"
+    },
+    {
+      "type": "type",
+      "selector": "#quantity",
+      "value": "5",
+      "description": "Change quantity to update canvas chart"
+    },
+    {
+      "type": "click",
+      "selector": "#checkout-btn",
+      "description": "Open checkout modal"
+    }
+  ],
+  "expected_routes": ["text_only", "text_only", "crop_with_context", "text_only"]
+}

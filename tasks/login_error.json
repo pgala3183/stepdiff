@@ -1,0 +1,13 @@
+{
+  "id": "login_error",
+  "description": "Submit empty form to trigger validation error",
+  "url": "demo_pages/local_checkout.html",
+  "actions": [
+    {
+      "type": "click",
+      "selector": "#submit-btn",
+      "description": "Submit empty form"
+    }
+  ],
+  "expected_routes": ["text_only"]
+}
