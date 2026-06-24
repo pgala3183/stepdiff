@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets and local env
+.env
+
+# Recorded runs (regenerate locally)
+runs/
+backend/runs/
+
+# Node / viewer build artifacts
+viewer/node_modules/
+viewer/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Playwright / crops from local runs
+**/crops/
+**/__pycache__/
